@@ -4,7 +4,7 @@
 # Contributor: Xu Fasheng <fasheng.xu[AT]gmail.com>
 
 pkgname=deepin-screenshot-fork
-pkgver=4.0.6
+pkgver=4.0.8
 pkgrel=1
 pkgdesc="Easy-to-use screenshot tool for linuxdeepin desktop environment"
 arch=('i686' 'x86_64')
