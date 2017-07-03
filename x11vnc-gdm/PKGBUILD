@@ -1,0 +1,21 @@
+# Maintainer: Huang Jiayao <huangjiayao_1992@163.com>
+
+pkgname=x11vnc-gdm
+pkgver=0.1
+pkgrel=1
+pkgdesc="launch x11vnc for gdm with Xorg mode"
+arch=('any')
+url="https://github.com/alienhjy/archlinux-pkgbuilds"
+license=('GPL3')
+depends=('x11vnc')
+source=(
+    "x11vnc-gdm.sh"
+    "x11vnc-gdm.service"
+)
+md5sums=('d67c1344330b0a6cc9400112831a105f'
+         'f372c911ded3939a93221c236d9501d0')
+
+package() {
+  install -Dm0755 x11vnc-gdm.sh -o root -g root ${pkgdir}/usr/lib/x11vnc-gdm/x11vnc-gdm.sh
+  install -Dm0644 x11vnc-gdm.service -o root -g root ${pkgdir}/usr/lib/systemd/system/x11vnc-gdm.service
+}

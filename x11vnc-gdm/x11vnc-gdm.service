@@ -1,0 +1,11 @@
+[Unit]
+Description=Launch x11vnc for gdm with Xorg mode.
+After=network.target display-manager.service
+
+[Service]
+ExecStart=/bin/sh /usr/lib/x11vnc-gdm/x11vnc-gdm.sh start
+ExecStop=/bin/sh /usr/lib/x11vnc-gdm/x11vnc-gdm.sh stop
+
+[Install]
+WantedBy=multi-user.target
+
