@@ -1,8 +1,8 @@
-# deepin-screenshot-pkgbuild
+# archlinux-pkgbuilds
 
-base from: https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/deepin-screenshot
+some of my own archlinux packages.
 
-## What difference with deepin-screenshot from ArchLinux official repo?
+## deepin-screenshot-fork
 
-This PKGBUILD remove deepin-daemon from depends.
+base of deepin-screenshot, remove deepin-daemon from depends.
 
