@@ -5,7 +5,7 @@
 
 pkgname=deepin-screenshot-fork
 pkgver=4.0.8
-pkgrel=1
+pkgrel=2
 pkgdesc="Easy-to-use screenshot tool for linuxdeepin desktop environment"
 arch=('i686' 'x86_64')
 url="https://github.com/linuxdeepin/deepin-screenshot"
