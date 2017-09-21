@@ -10,5 +10,6 @@
 *.sig
 
 deepin-screenshot/
+n2n-git/n2n/
 pkg/
 src/
