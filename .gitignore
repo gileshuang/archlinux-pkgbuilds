@@ -8,8 +8,10 @@
 *.log
 *.log.*
 *.sig
+*.deb
 
 deepin-screenshot/
 n2n-git/n2n/
 pkg/
 src/
+/netease-cloud-music/service.html
