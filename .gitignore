@@ -1,3 +1,4 @@
+.SRCINFO
 *.tar
 *.tar.*
 *.jar
@@ -9,6 +10,7 @@
 *.log.*
 *.sig
 *.deb
+*.install.pkg
 
 deepin-screenshot/
 n2n-git/n2n/
