@@ -15,11 +15,11 @@ depends=(
 	"vlc"
 )
 source=(
-	"http://cdimage.deepin.com/applications/${pkgname}/64/${pkgname//-/_}_${pkgver}_amd64_binary.tar.gz"
+	"http://cdimage.deepin.com/applications/${pkgname}/64/${pkgname//-/_}_${pkgver}_amd64_binary.tar.xz"
 	"http://music.163.com/html/web2/service.html"
 )
 md5sums=('a09dbf27c3e009bdfdc487975a4f4a52'
-         'e671fac37a3a484a9f177a03c3217409')
+         'SKIP')
 
 package() {
   cd ${srcdir}
