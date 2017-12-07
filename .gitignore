@@ -9,6 +9,7 @@
 *.log
 *.log.*
 *.sig
+*.rpm
 *.deb
 *.install.pkg
 
