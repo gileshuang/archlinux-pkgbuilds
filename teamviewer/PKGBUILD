@@ -1,7 +1,7 @@
 # Maintainer: Alex Taber <aft dot pokemon at gmail dot com>
 
 pkgname=teamviewer
-pkgver=13.0.6634
+pkgver=13.0.9865
 pkgrel=1
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=('hicolor-icon-theme'
          'qt5-x11extras')
 install=teamviewer.install
 source=("https://dl.tvcdn.de/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}.x86_64.rpm")
-md5sums=('8a6cb509a0f7aa4ec9657fc3b363aa2d')
+md5sums=('ae96c7641b73708ff8aeb7e5db3bea6c')
 
 package() {
   cp -dr --no-preserve=ownership {etc,opt,usr,var} "$pkgdir"
