@@ -1,7 +1,7 @@
 # Maintainer: Alex Taber <aft dot pokemon at gmail dot com>
 
 pkgname=teamviewer
-pkgver=13.0.9865
+pkgver=13.1.3026
 pkgrel=1
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('x86_64')
@@ -12,21 +12,49 @@ depends=('hicolor-icon-theme'
          'qt5-webkit'
          'qt5-x11extras')
 install=teamviewer.install
-source=("https://dl.tvcdn.de/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}.x86_64.rpm")
-md5sums=('ae96c7641b73708ff8aeb7e5db3bea6c')
+source=("https://dl.tvcdn.de/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.tar.xz")
+md5sums=('11a83c3b8307748ef4b387a181ce04f5')
 
 package() {
-  cp -dr --no-preserve=ownership {etc,opt,usr,var} "$pkgdir"
+  install -d -m0755 "$pkgdir"/opt/teamviewer
+  install -d -m0755 "$pkgdir"/etc/teamviewer
+  install -d -m0755 "$pkgdir"/var/log/teamviewer13
+  ln -sf ../../var/log/teamviewer13 "$pkgdir"/opt/teamviewer/logfiles
+  ln -sf ../../etc/teamviewer "$pkgdir"/opt/teamviewer/config
+  cp -dr --no-preserve=ownership teamviewer/{doc,tv_bin} "$pkgdir"/opt/teamviewer
 
-  # Remove useless files
-  rm -rf "$pkgdir"/etc/yum.repos.d
+  # Symlink bin file
+  install -d -m0755 "$pkgdir"/usr/bin
+  ln -sf ../../opt/teamviewer/tv_bin/script/teamviewer "$pkgdir"/usr/bin/teamviewer
 
   # Systemd script
   install -D -m0644 "$pkgdir"/opt/teamviewer/tv_bin/script/teamviewerd.service \
     -t "$pkgdir"/usr/lib/systemd/system
+
+  # Applications, polkit and dbus
+  install -d -m0755 "$pkgdir"/usr/share/applications
+  ln -sf ../../../opt/teamviewer/tv_bin/desktop/com.teamviewer.TeamViewer.desktop \
+    "$pkgdir"/usr/share/applications/com.teamviewer.TeamViewer.desktop
+
+  for PIX in {16,20,24,32,48,256}; do
+    install -d -m0755 "$pkgdir"/usr/share/icons/hicolor/${PIX}x${PIX}/apps
+    ln -sf ../../../../../../opt/teamviewer/tv_bin/desktop/teamviewer_${PIX}.png \
+      "$pkgdir"/usr/share/icons/hicolor/${PIX}x${PIX}/apps/TeamViewer.png
+  done
+
+  install -d -m0755 "$pkgdir"/usr/share/dbus-1/services
+  ln -sf ../../../../opt/teamviewer/tv_bin/script/com.teamviewer.TeamViewer.Desktop.service \
+    "$pkgdir"/usr/share/dbus-1/services/com.teamviewer.TeamViewer.Desktop.service
+  ln -sf ../../../../opt/teamviewer/tv_bin/script/com.teamviewer.TeamViewer.service \
+    "$pkgdir"/usr/share/dbus-1/services/com.teamviewer.TeamViewer.service
+
+  install -d -m0755 "$pkgdir"/usr/share/polkit-1/actions
+  ln -sf ../../../../usr/share/polkit-1/actions/com.teamviewer.TeamViewer.policy \
+    "$pkgdir"/usr/share/polkit-1/actions/com.teamviewer.TeamViewer.policy
+
   # License
   install -d -m0755 "$pkgdir"/usr/share/licenses/teamviewer
-  ln -s /opt/teamviewer/doc/License.txt \
+  ln -s ../../../../opt/teamviewer/doc/License.txt \
     "$pkgdir"/usr/share/licenses/teamviewer/LICENSE
 }
 
