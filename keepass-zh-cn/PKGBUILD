@@ -1,6 +1,6 @@
 # Maintainer: halflife <pigoig_at_gmail_com>
 pkgname=keepass-zh-cn
-pkgver=2.38
+pkgver=2.39
 pkgrel=1
 pkgdesc="Chinese Simplified locale for keepass"
 license=('GPL2')
