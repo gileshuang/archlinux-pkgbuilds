@@ -1,7 +1,7 @@
 # Maintainer: Alex Taber <aft dot pokemon at gmail dot com>
 
 pkgname=teamviewer
-pkgver=13.1.8286
+pkgver=14.0.8346
 pkgrel=1
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('x86_64')
@@ -13,13 +13,13 @@ depends=('hicolor-icon-theme'
          'qt5-x11extras')
 install=teamviewer.install
 source=("https://dl.tvcdn.de/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.tar.xz")
-md5sums=('49a2e63ca79e22bd6dae57886b0258ef')
+md5sums=('632696b47966a0dd0830773a0e77b7b9')
 
 package() {
   install -d -m0755 "$pkgdir"/opt/teamviewer
   install -d -m0755 "$pkgdir"/etc/teamviewer
-  install -d -m0777 "$pkgdir"/var/log/teamviewer13
-  ln -sf ../../var/log/teamviewer13 "$pkgdir"/opt/teamviewer/logfiles
+  install -d -m0777 "$pkgdir"/var/log/teamviewer
+  ln -sf ../../var/log/teamviewer "$pkgdir"/opt/teamviewer/logfiles
   ln -sf ../../etc/teamviewer "$pkgdir"/opt/teamviewer/config
   cp -dr --no-preserve=ownership teamviewer/{doc,tv_bin} "$pkgdir"/opt/teamviewer
 
