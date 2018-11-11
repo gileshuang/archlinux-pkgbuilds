@@ -1,7 +1,7 @@
 # Maintainer: Daniel Bermond < yahoo-com: danielbermond >
 
 pkgname=wine-staging-git
-pkgver=3.19.r4.gac5710e7+wine.3.19.r99.g09a81b30f8
+pkgver=3.20.r0.ga1b38470+wine.3.20.r0.ge9e12bda62
 pkgrel=1
 pkgdesc='A compatibility layer for running Windows programs (staging branch, git version)'
 arch=('i686' 'x86_64')
