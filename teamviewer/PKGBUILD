@@ -1,8 +1,8 @@
 # Maintainer: Alex Taber <aft dot pokemon at gmail dot com>
 
 pkgname=teamviewer
-pkgver=14.1.3399
-pkgrel=1
+pkgver=14.1.9025
+pkgrel=2
 pkgdesc='All-In-One Software for Remote Support and Online Meetings'
 arch=('x86_64')
 url='https://www.teamviewer.com'
@@ -12,8 +12,10 @@ depends=('hicolor-icon-theme'
          'qt5-webkit'
          'qt5-x11extras')
 install=teamviewer.install
-source=("https://dl.tvcdn.de/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.tar.xz")
-md5sums=('da3756454a1134298be290320b934338')
+source=("https://dl.tvcdn.de/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.tar.xz"
+        "tvw_profile")
+md5sums=('86d57afd83f904b9d99db0029606b8e8'
+         '179ed9d92e134c3ef15007b147f33456')
 
 package() {
   install -d -m0755 "$pkgdir"/opt/teamviewer
@@ -51,6 +53,10 @@ package() {
   install -d -m0755 "$pkgdir"/usr/share/polkit-1/actions
   ln -sf ../../../../usr/share/polkit-1/actions/com.teamviewer.TeamViewer.policy \
     "$pkgdir"/usr/share/polkit-1/actions/com.teamviewer.TeamViewer.policy
+
+  # Fix startup permission
+  rm -f "$pkgdir"/opt/teamviewer/tv_bin/script/tvw_profile
+  install -D -m0755 tvw_profile "$pkgdir"/opt/teamviewer/tv_bin/script/tvw_profile
 
   # License
   install -d -m0755 "$pkgdir"/usr/share/licenses/teamviewer
