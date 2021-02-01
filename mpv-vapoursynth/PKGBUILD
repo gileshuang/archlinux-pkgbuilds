@@ -4,21 +4,27 @@
 
 pkgname=mpv-vapoursynth
 _pkgname=mpv
-_tag='d81133141f052187016a8cb4cf034c35ba39e0ba' # git rev-parse v${pkgver}
-pkgver=0.32.0
-pkgrel=5
+_tag='d5ae9f70ea1f21c1d3794df5345a6a9366188660' # git rev-parse v${pkgver}
+pkgver=0.33.0
+pkgrel=4
 pkgdesc='a free, open source, and cross-platform media player'
 arch=('x86_64')
-# We link against libraries that are licensed GPLv3 explicitly, libsmbclient
-# being one of these. So our package is GPLv3 only as well.
+# We link against libraries that are licensed GPLv3 explicitly, so our
+# package is GPLv3 only as well. (Is this still correct?)
 license=('GPL3')
 url='https://mpv.io/'
-depends=('desktop-file-utils' 'ffmpeg' 'hicolor-icon-theme' 'libjack.so' 'lcms2'
-         'libarchive' 'libcaca' 'libcdio-paranoia' 'libdvdnav' 'libgl' 'libva'
-         'libxinerama' 'libxkbcommon' 'libxrandr' 'libxss' 'libxv' 'lua52'
-         'librubberband.so' 'smbclient' 'uchardet' 'vulkan-icd-loader' 'wayland'
-         'xdg-utils' 'shaderc' 'mujs' 'libplacebo' 'libplacebo.so' 'vapoursynth')
-makedepends=('git' 'mesa' 'python-docutils' 'ladspa' 'wayland-protocols'
+depends=('alsa-lib' 'libasound.so' 'desktop-file-utils' 'ffmpeg' 'libavcodec.so' 'libavdevice.so'
+         'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
+         'glibc' 'hicolor-icon-theme' 'jack' 'libjack.so' 'lcms2' 'liblcms2.so' 'libarchive'
+         'libarchive.so' 'libass' 'libass.so' 'libbluray' 'libbluray.so' 'libcaca' 'libcdio'
+         'libcdio-paranoia' 'libdrm' 'libdvdnav' 'libdvdread' 'libegl' 'libgl' 'libglvnd'
+         'libjpeg' 'libjpeg.so' 'libplacebo' 'libplacebo.so' 'libpulse' 'libpulse.so'
+         'libva' 'libva.so' 'libva-drm.so' 'libva-wayland.so' 'libva-x11.so' 'libvdpau' 'libx11'
+         'libxext' 'libxinerama' 'libxkbcommon' 'libxkbcommon.so' 'libxrandr' 'libxss'
+         'libxv' 'lua52' 'mesa' 'mujs' 'rubberband' 'librubberband.so' 'shaderc'
+         'libshaderc_shared.so' 'uchardet' 'vulkan-icd-loader' 'wayland' 'xdg-utils'
+         'zlib' 'vapoursynth')
+makedepends=('git' 'python-docutils' 'ladspa' 'wayland-protocols'
              'ffnvcodec-headers' 'vulkan-headers' 'waf')
 optdepends=('youtube-dl: for video-sharing websites playback')
 provides=('libmpv.so')
@@ -27,6 +33,13 @@ provides=($_pkgname)
 options=('!emptydirs')
 source=("git+https://github.com/mpv-player/mpv.git#tag=${_tag}")
 sha256sums=('SKIP')
+
+prepare() {
+  cd ${_pkgname}
+
+  # vo_gpu: placebo: update for upstream API changes
+  git cherry-pick -n 7c4465cefb27d4e0d07535d368febdf77b579566
+}
 
 build() {
   cd ${_pkgname}
@@ -38,7 +51,6 @@ build() {
     --enable-dvdnav \
     --enable-libarchive \
     --enable-libmpv-shared \
-    --enable-libsmbclient \
     --enable-vapoursynth \
     --disable-build-date
 
