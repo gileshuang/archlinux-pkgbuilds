@@ -1,0 +1,32 @@
+# Maintainer: DuckSoft <realducksoft at gmail dot com>
+pkgname=mybase-desktop-bin
+pkgver=8213
+pkgrel=1
+pkgdesc='A high-quality free-form database program for personal note-taking and knowledgebase management'
+arch=('x86_64')
+url='http://www.wjjsoft.com'
+license=('custom: commercial')
+depends=('zlib' 'glibc' 'gcc-libs' 'libpng12')
+provides=('mybase-desktop')
+conflicts=('mybase-desktop')
+source=(
+    "http://www.wjjsoft.com/downloads/Mybase-Desktop-Ver${pkgver}-Linux-amd64.tar.xz"
+    "Mybase.desktop"
+)
+sha512sums=('dd4c117be58dbf7314647ba6da1ef160dba1155ed9ef37ecc9a2391eea9161e9be6a9cf3ac55b4941f253154d6fd32a3aa0af6ad9e5846d8d170cedeaba4519c'
+            '8098d29635b3576e67fe61f55d816203d6930aa16b4308e3b6b5ee38129b6747991c586401174c51541f9920af2114dfd868607e2f2a0dce177f9430f141277f')
+
+package() {
+    install -d "${pkgdir}/usr/share/licenses/mybase-desktop"
+    install -d "${pkgdir}/usr/share/applications"
+    install -d "${pkgdir}/usr/share/icons" 
+    install -d "${pkgdir}/usr/bin"
+    install -d "${pkgdir}/opt"
+    
+    
+    cp -r "${srcdir}/Mybase8" "${pkgdir}/opt/"
+    install -m644 "${srcdir}/Mybase8/license.txt" "${pkgdir}/usr/share/licenses/mybase-desktop/LICENSE"
+    install -m644 "${srcdir}/Mybase8/nyf8_logo_256.png" "${pkgdir}/usr/share/icons/Mybase.png"
+    install -m644 "${srcdir}/Mybase.desktop" "${pkgdir}/usr/share/applications/Mybase.desktop"
+    ln -s /opt/Mybase8/myBase.run "${pkgdir}/usr/bin/Mybase"
+}
