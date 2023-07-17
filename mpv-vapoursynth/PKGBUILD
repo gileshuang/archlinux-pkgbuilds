@@ -7,7 +7,7 @@ pkgname=mpv-vapoursynth
 _pkgname=mpv
 _tag='5ae02ccad10542a74b397e39800ec01def0db4e1' # git rev-parse v${pkgver}
 pkgver=0.35.1
-pkgrel=6
+pkgrel=7
 pkgdesc='a free, open source, and cross-platform media player'
 arch=('x86_64')
 # We link against libraries that are licensed GPLv3 explicitly, so our
@@ -45,8 +45,6 @@ prepare() {
 }
 
 build() {
-#  cd ${_pkgname}
-
   local _meson_options=(
     --auto-features auto
 
@@ -66,14 +64,10 @@ build() {
 }
 
 check() {
-#  cd ${_pkgname}
-
   meson test -C build
 }
 
 package() {
-#  cd ${_pkgname}
-
   meson install -C build --destdir "${pkgdir}"
 
   # delete private entries only required for static linking 
