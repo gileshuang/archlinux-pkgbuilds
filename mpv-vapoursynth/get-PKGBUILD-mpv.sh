@@ -1,3 +1,4 @@
 #!/bin/bash
 
-wget 'https://raw.githubusercontent.com/archlinux/svntogit-community/packages/mpv/trunk/PKGBUILD' -O PKGBUILD-mpv
+wget 'https://gitlab.archlinux.org/archlinux/packaging/packages/mpv/-/raw/main/PKGBUILD' -O PKGBUILD-mpv
+
