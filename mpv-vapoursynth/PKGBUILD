@@ -5,8 +5,8 @@
 
 pkgname=mpv-vapoursynth
 _pkgname=mpv
-_tag='3996724d3fa1c51cc7998f3de2e22e2c99e6d270' # git rev-parse v${pkgver}
-pkgver=0.36.0
+_tag='807b9343ef911d138950411cdb83c16a151d2018' # git rev-parse v${pkgver}
+pkgver=0.37.0
 pkgrel=1
 pkgdesc='a free, open source, and cross-platform media player'
 arch=('x86_64')
@@ -19,12 +19,11 @@ depends=('alsa-lib' 'libasound.so' 'desktop-file-utils' 'ffmpeg' 'libavcodec.so'
          'glibc' 'hicolor-icon-theme' 'jack' 'libjack.so' 'lcms2' 'liblcms2.so' 'libarchive'
          'libarchive.so' 'libass' 'libass.so' 'libbluray' 'libbluray.so' 'libcdio'
          'libcdio-paranoia' 'libdrm' 'libdvdnav' 'libdvdread' 'libegl' 'libgl' 'libglvnd'
-         'libjpeg' 'libjpeg.so' 'libplacebo' 'libplacebo.so' 'libpulse' 'libpulse.so'
+         'libjpeg' 'libjpeg.so' 'libplacebo' 'libplacebo.so' 'libpulse' 'libpulse.so' 'libsixel'
          'libva' 'libva.so' 'libva-drm.so' 'libva-wayland.so' 'libva-x11.so' 'libvdpau' 'libx11'
          'libxext' 'libxinerama' 'libxkbcommon' 'libxkbcommon.so' 'libxpresent' 'libxrandr' 'libxss'
          'libxv' 'luajit' 'mesa' 'mujs' 'libpipewire' 'rubberband' 'librubberband.so' 'shaderc'
-         'libshaderc_shared.so' 'uchardet' 'vulkan-icd-loader' 'wayland' 'zlib'
-         'vapoursynth')
+         'libshaderc_shared.so' 'openal' 'uchardet' 'vapoursynth' 'vulkan-icd-loader' 'wayland' 'zlib')
 makedepends=('git' 'meson' 'python-docutils' 'ladspa' 'wayland-protocols'
              'ffnvcodec-headers' 'vulkan-headers')
 optdepends=('yt-dlp: for video-sharing websites playback'
@@ -47,6 +46,7 @@ build() {
     -Ddvbin=enabled
     -Ddvdnav=enabled
     -Dlibarchive=enabled
+    -Dopenal=enabled
     -Dvapoursynth=enabled
   )
 
@@ -68,6 +68,6 @@ package() {
   install -m0644 "${_pkgname}"/DOCS/{encoding.rst,tech-overview.txt} \
     "${pkgdir}"/usr/share/doc/mpv
 
-  install -m0644 "${_pkgname}"/TOOLS/lua/* \
+  install -m0644 "${_pkgname}"/TOOLS/{umpv,mpv_identify.sh,stats-conv.py,idet.sh,lua/*} \
     -D -t "${pkgdir}"/usr/share/mpv/scripts
 }
