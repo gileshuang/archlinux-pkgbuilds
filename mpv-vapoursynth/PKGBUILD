@@ -6,13 +6,11 @@
 pkgname=mpv-vapoursynth
 _pkgname=mpv
 _tag='807b9343ef911d138950411cdb83c16a151d2018' # git rev-parse v${pkgver}
-pkgver=0.37.0
-pkgrel=1
+pkgver=0.38.0
+pkgrel=5
 pkgdesc='a free, open source, and cross-platform media player'
 arch=('x86_64')
-# We link against libraries that are licensed GPLv3 explicitly, so our
-# package is GPLv3 only as well. (Is this still correct?)
-license=('GPL3')
+license=('GPL-2.0-or-later AND LGPL-2.1-or-later')
 url='https://mpv.io/'
 depends=('alsa-lib' 'libasound.so' 'desktop-file-utils' 'ffmpeg' 'libavcodec.so' 'libavdevice.so'
          'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
@@ -21,26 +19,38 @@ depends=('alsa-lib' 'libasound.so' 'desktop-file-utils' 'ffmpeg' 'libavcodec.so'
          'libcdio-paranoia' 'libdrm' 'libdvdnav' 'libdvdread' 'libegl' 'libgl' 'libglvnd'
          'libjpeg' 'libjpeg.so' 'libplacebo' 'libplacebo.so' 'libpulse' 'libpulse.so' 'libsixel'
          'libva' 'libva.so' 'libva-drm.so' 'libva-wayland.so' 'libva-x11.so' 'libvdpau' 'libx11'
-         'libxext' 'libxinerama' 'libxkbcommon' 'libxkbcommon.so' 'libxpresent' 'libxrandr' 'libxss'
-         'libxv' 'luajit' 'mesa' 'mujs' 'libpipewire' 'rubberband' 'librubberband.so' 'shaderc'
-         'libshaderc_shared.so' 'openal' 'uchardet' 'vapoursynth' 'vulkan-icd-loader' 'wayland' 'zlib')
+         'libxext' 'libxkbcommon' 'libxkbcommon.so' 'libxpresent' 'libxrandr' 'libxss'
+         'libxv' 'luajit' 'mesa' 'mujs' 'libpipewire' 'rubberband' 'librubberband.so'
+         'openal' 'uchardet' 'vapoursynth' 'vulkan-icd-loader' 'wayland' 'zlib')
 makedepends=('git' 'meson' 'python-docutils' 'ladspa' 'wayland-protocols'
              'ffnvcodec-headers' 'vulkan-headers')
-optdepends=('yt-dlp: for video-sharing websites playback'
-            'youtube-dl: for video-sharing websites playback')
+optdepends=('yt-dlp: for video-sharing websites playback')
 provides=('libmpv.so')
 conflicts=($_pkgname)
 provides=($_pkgname)
 options=('!emptydirs')
-source=("git+https://github.com/mpv-player/mpv.git#tag=${_tag}")
-sha256sums=('SKIP')
+source=("git+https://github.com/mpv-player/mpv.git#tag=v${pkgver}"
+        "dynamically_generate_desktop_file_protocols.patch")
+sha256sums=('b37b91d0ae4518594b22338ebe979f13bdc56b6fa26d589e5c3f7b96a31bab3d'
+            '88acf97cbc8e0fe745f09bd0bd7f65e0437adcb549dadf3588fd0724d01298e9')
+
+prepare() {
+  cd "${_pkgname}"
+  # Patch to dynamically generate protocols in the mpv.desktop file
+  # Taken from https://github.com/mpv-player/mpv/pull/14145
+  # Fixes:
+  # - https://github.com/mpv-player/mpv/issues/8731
+  # - https://github.com/mpv-player/mpv/issues/14124
+  # - https://gitlab.archlinux.org/archlinux/packaging/packages/mpv/-/issues/10
+  patch -Np1 < "${srcdir}/dynamically_generate_desktop_file_protocols.patch"
+}
 
 build() {
   local _meson_options=(
     --auto-features auto
 
     -Dlibmpv=true
-
+    -Dgl-x11=enabled
     -Dcaca=disabled
     -Dcdda=enabled
     -Ddvbin=enabled
