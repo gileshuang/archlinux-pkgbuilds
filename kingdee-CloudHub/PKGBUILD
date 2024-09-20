@@ -1,20 +1,18 @@
 # Maintainer: 云之家网络(重庆)有限公司
 # Contributor: HuangJiayao <huangjiayao_1992@163.com>
 pkgname=cloudhub-bin
-pkgver=4.2.6_4814
+pkgver=4.4.0_2409181915
 pkgrel=1
 pkgdesc="云之家网络(重庆)有限公司
   云之家桌面端"
-arch=('x86_64' 'aarch64')
+arch=('x86_64')
 url="https://www.yunzhijia.com"
 license=('custom')
 depends=('gtk3' 'libnotify' 'nss' 'libxss' 'libxtst' 'xdg-utils'
     'at-spi2-core' 'util-linux-libs' 'libsecret')
 optdepends=('libappindicator-gtk3: Allow CloudHub to extend a menu via Ayatana indicators in Unity, KDE or Systray (GTK+ 3 library).')
-source_x86_64=("https://res.yunzhijia.com/mixed/cloudhubx/linux_x64/CloudHub_x64_${pkgver%_*}_2401181249.deb")
-source_aarch64=("https://res.yunzhijia.com/mixed/cloudhubx/linux_arm64/CloudHub_arm64_4.2.5_2312141420.deb")
-sha512sums_x86_64=('12c6e911ffb7812c8b1ac3188c9d194790bdc2adef27a42038f49f148ea033b7ec60e21d469a41d8422f20d37f673313515847ae333fbbefbcec5cc7075122c1')
-sha512sums_aarch64=('081856943a52f833db376ea7ab21c912bc462fd8bcb8c46ae4b595f0cdf38cdfaa65cfce550073fb3e20bdb97ee4b3552dfb6e0a9348bb0edad9a530a27f210c')
+source_x86_64=("https://res.yunzhijia.com/mixed/cloudhubx/linux_x64/CloudHub_x64_${pkgver}.deb")
+sha512sums_x86_64=('fae06f74b3c2224b8132473e11480f1e640b36a541f0469f06889c5411b88829b682ab113d00707a15547d80d9fdcc55140a18237015f1ce6a92d42202cccbaa')
 
 package() {
     echo "  -> Extracting the data.tar.xz..."
