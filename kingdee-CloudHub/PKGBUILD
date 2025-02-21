@@ -1,8 +1,8 @@
 # Maintainer: 云之家网络(重庆)有限公司
 # Contributor: HuangJiayao <huangjiayao_1992@163.com>
 pkgname=cloudhub-bin
-pkgver=4.4.0_2409181915
-pkgrel=1
+pkgver=4.5.1_2502171032
+pkgrel=2
 pkgdesc="云之家网络(重庆)有限公司
   云之家桌面端"
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('gtk3' 'libnotify' 'nss' 'libxss' 'libxtst' 'xdg-utils'
     'at-spi2-core' 'util-linux-libs' 'libsecret')
 optdepends=('libappindicator-gtk3: Allow CloudHub to extend a menu via Ayatana indicators in Unity, KDE or Systray (GTK+ 3 library).')
 source_x86_64=("https://res.yunzhijia.com/mixed/cloudhubx/linux_x64/CloudHub_x64_${pkgver}.deb")
-sha512sums_x86_64=('fae06f74b3c2224b8132473e11480f1e640b36a541f0469f06889c5411b88829b682ab113d00707a15547d80d9fdcc55140a18237015f1ce6a92d42202cccbaa')
+sha512sums_x86_64=('3b0402231ce534cb67fbcaa3614f952bc29ed9d9f53c6e1cacfffd2c35dd2d863b8520fe20e7b8304b8393d6f39952c906beca79795fd151af32f554a1d5815b')
 
 package() {
     echo "  -> Extracting the data.tar.xz..."
@@ -22,5 +22,5 @@ package() {
     # Launcher
     install -dm755 "${pkgdir}/usr/bin/"
     ln -Tsf "/opt/云之家/CloudHub" "${pkgdir}/usr/bin/CloudHub"
-    chmod 4755 "${pkgdir}/opt/云之家/chrome-sandbox" || true
+    #chmod 4755 "${pkgdir}/opt/云之家/chrome-sandbox" || true
 }
