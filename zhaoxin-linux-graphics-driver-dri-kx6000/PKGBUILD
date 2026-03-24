@@ -5,7 +5,7 @@
 _pkgname=zhaoxin-linux-graphics-driver-dri-kx6000
 pkgname=${_pkgname}-dkms
 pkgver=21.00.86
-pkgrel=2
+pkgrel=3
 url="https://www.zhaoxin.com"
 pkgdesc="Graphics driver for Zhaoxin C-960 (KX-6000/6900 series). \
     Fixed by https://handbook.aaether.net/pages/zhaoxin-kx-6000-igpu-driver.html"
@@ -23,6 +23,7 @@ source=(
     "modprobe.d_zx_gfx.conf"
     "egl_vendor.d_10_zx.json"
     "xorg.conf.d_10-zxgpu.conf"
+    "profile.d_zhaoxin-glsl.sh"
     "${_patch_url_prefix}/0001-fix-kbuild-replace-EXTRA_CFLAGS-with-ccflags-y.patch"
     "${_patch_url_prefix}/0002-chore-dkms-remove-useless-variables.patch"
     "${_patch_url_prefix}/0003-fix-kernel-6.15.patch"
@@ -39,6 +40,7 @@ sha256sums=('93627a5f44c7ed7dc6fff82bbd3906a7e42fb3258c850eb81de3fe1f7ab25b0e'
             '14bd06ee764696dd503377f3ff1cef891bfd6224713e891a5040aace8e627c23'
             'bcaa1c1d89ed3de9f29e08fe4c41db20784571541728a878707f43b078c9692b'
             'e5a99435a96d7603c90302e7a8fbc688e6f8102186c43b692ea93b97abc021ae'
+            '42cf39285a872ef67d03689e232847d80c2f54f2d5abb3c9570a5a5f8850b7c6'
             '74b5207175d05661c8ff120d48771eded3a1afe03203a526400965b9dc3f4c86'
             '4390ee229d537a385a775d75c40447b56fe48579f272270d263e046055088fba'
             '7b950be85f35c138c90b4ce9057cab3ff230fb7c76e82f2fea614f4f34744bc3'
@@ -76,6 +78,7 @@ package() {
     install -Dm644 -T modprobe.d_zx_gfx.conf "${pkgdir}/etc/modprobe.d/zx_gfx.conf"
     install -Dm644 -T egl_vendor.d_10_zx.json "${pkgdir}/usr/share/glvnd/egl_vendor.d/10_zx.json"
     install -Dm644 -T xorg.conf.d_10-zxgpu.conf "${pkgdir}/usr/share/X11/xorg.conf.d/10-zxgpu.conf"
+    install -Dm755 -T profile.d_zhaoxin-glsl.sh "${pkgdir}/etc/profile.d/zhaoxin-glsl.sh"
 
     install ${pkgdir}/usr/lib/x86_64-linux-gnu/libEGL_zx.so.0.0.0 ${pkgdir}/usr/lib/libEGL_zx.so.0
     install ${pkgdir}/usr/lib/x86_64-linux-gnu/libglapi_zx.so.0.0.0 ${pkgdir}/usr/lib/libglapi_zx.so.0
