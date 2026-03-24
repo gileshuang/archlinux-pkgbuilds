@@ -1,0 +1,93 @@
+# Maintainer: ZhaoXin Graphics SW
+# Contributor: Aether Chen
+# Contributor: AOSC OS Maintainers <maintainers@aosc.io>
+
+_pkgname=zhaoxin-linux-graphics-driver-dri-kx6000
+pkgname=${_pkgname}-dkms
+pkgver=21.00.86
+pkgrel=2
+url="https://www.zhaoxin.com"
+pkgdesc="Graphics driver for Zhaoxin C-960 (KX-6000/6900 series). \
+    Fixed by https://handbook.aaether.net/pages/zhaoxin-kx-6000-igpu-driver.html"
+license=('custom:zhaoxin')
+arch=('x86_64')
+_patch_url_prefix="https://github.com/AOSC-Dev/aosc-os-abbs/raw/refs/heads/stable/runtime-display/zhaoxin-linux-graphics-driver-dri/autobuild/module-patches"
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+depends=('glibc' 'dkms' 'libdrm' 'libglvnd' 'mesa' 'libxcb' 'wayland')
+optdepends=('linux-headers: Build the module for Arch kernel'
+            'linux-lts-headers: Build the module for LTS Arch kernel')
+source=(
+    "zhaoxin-linux-graphics-driver-dri-glvnd-${pkgver}_amd64.deb"
+    "mkinitcpio.drop-in.conf"
+    "modprobe.d_zx_gfx.conf"
+    "egl_vendor.d_10_zx.json"
+    "xorg.conf.d_10-zxgpu.conf"
+    "${_patch_url_prefix}/0001-fix-kbuild-replace-EXTRA_CFLAGS-with-ccflags-y.patch"
+    "${_patch_url_prefix}/0002-chore-dkms-remove-useless-variables.patch"
+    "${_patch_url_prefix}/0003-fix-kernel-6.15.patch"
+    "${_patch_url_prefix}/0004-fix-kernel-6.16.patch"
+    "${_patch_url_prefix}/0005-fix-kernel-6.17.patch"
+    "${_patch_url_prefix}/0006-fix-kernel-6.18.patch"
+    "${_patch_url_prefix}/0007-chore-import-.gitignore-from-loonggpu-kernel-dkms.patch"
+    "${_patch_url_prefix}/0008-refactor-NFC-rename-zxfb_create-to-zx_fbdev_probe.patch"
+    "${_patch_url_prefix}/0009-fix-run-DRM-default-client-setup-on-Linux-6.15.patch"
+    "0010-fix-kernel-6.19.patch"
+)
+sha256sums=('93627a5f44c7ed7dc6fff82bbd3906a7e42fb3258c850eb81de3fe1f7ab25b0e'
+            '810334420f804e9eee44c392ad1b9a643324651833255e4fabd2e9b9a4df757f'
+            '14bd06ee764696dd503377f3ff1cef891bfd6224713e891a5040aace8e627c23'
+            'bcaa1c1d89ed3de9f29e08fe4c41db20784571541728a878707f43b078c9692b'
+            'e5a99435a96d7603c90302e7a8fbc688e6f8102186c43b692ea93b97abc021ae'
+            '74b5207175d05661c8ff120d48771eded3a1afe03203a526400965b9dc3f4c86'
+            '4390ee229d537a385a775d75c40447b56fe48579f272270d263e046055088fba'
+            '7b950be85f35c138c90b4ce9057cab3ff230fb7c76e82f2fea614f4f34744bc3'
+            '5128753af7ac030e0aa7990ee46defd3ea3183478c89d6bb9d9650908cfc863e'
+            '0808210b5feb918f086bbbfa314c15ccd12a766047bb1c8b5773af7569a70d50'
+            '18c111cbcb7349340800fac54f082f1d31ffe6e9dea218a0f1831d472b209b1f'
+            '27601d73a145771a213b3af4cf003ef7f88f4b96b601483a0f223e5f31889cac'
+            '1d5b0499bd8a60eb103b98a34f3ac206f20c5f90603598947af12c9e692863f1'
+            '728e4110e79c16c0177d928967ad9ef1782a87c78811a69fdbc3767bd2585241'
+            'a287f3d3e7b3c3e6b816c1504d44588b627a2040d01d2bdb1bb1d1a8b2903146')
+
+package() {
+    echo "  -> Extracting the data.tar.xz..."
+    bsdtar -xf data.tar.xz -C "${pkgdir}/"
+
+    echo "  -> Apply patch from aosc-os-abbs"
+    echo "DEBUG: pkgdir: ${pkgdir}"
+    cd "${pkgdir}/usr/src/zx-${pkgver}"
+    patch -p1 < ${srcdir}/0001-fix-kbuild-replace-EXTRA_CFLAGS-with-ccflags-y.patch
+    patch -p1 < ${srcdir}/0002-chore-dkms-remove-useless-variables.patch
+    patch -p1 < ${srcdir}/0003-fix-kernel-6.15.patch
+    patch -p1 < ${srcdir}/0004-fix-kernel-6.16.patch
+    patch -p1 < ${srcdir}/0005-fix-kernel-6.17.patch
+    patch -p1 < ${srcdir}/0006-fix-kernel-6.18.patch
+    patch -p1 < ${srcdir}/0007-chore-import-.gitignore-from-loonggpu-kernel-dkms.patch
+    patch -p1 < ${srcdir}/0008-refactor-NFC-rename-zxfb_create-to-zx_fbdev_probe.patch
+    patch -p1 < ${srcdir}/0009-fix-run-DRM-default-client-setup-on-Linux-6.15.patch
+    patch -p1 < ${srcdir}/0010-fix-kernel-6.19.patch
+    cd -
+
+    echo "  -> Installing..."
+    rmdir ${pkgdir}/usr/local/bin
+    rm -rf ${pkgdir}/usr/share/initramfs-tools
+    install -Dm644 -T mkinitcpio.drop-in.conf "${pkgdir}/etc/mkinitcpio.conf.d/zhaoxin.conf"
+    install -Dm644 -T modprobe.d_zx_gfx.conf "${pkgdir}/etc/modprobe.d/zx_gfx.conf"
+    install -Dm644 -T egl_vendor.d_10_zx.json "${pkgdir}/usr/share/glvnd/egl_vendor.d/10_zx.json"
+    install -Dm644 -T xorg.conf.d_10-zxgpu.conf "${pkgdir}/usr/share/X11/xorg.conf.d/10-zxgpu.conf"
+
+    install ${pkgdir}/usr/lib/x86_64-linux-gnu/libEGL_zx.so.0.0.0 ${pkgdir}/usr/lib/libEGL_zx.so.0
+    install ${pkgdir}/usr/lib/x86_64-linux-gnu/libglapi_zx.so.0.0.0 ${pkgdir}/usr/lib/libglapi_zx.so.0
+    install ${pkgdir}/usr/lib/x86_64-linux-gnu/libGLX_zx.so.0.0.0 ${pkgdir}/usr/lib/libGLX_zx.so.0
+    install ${pkgdir}/usr/lib/x86_64-linux-gnu/libkeinterface_zx.so.0.0.0 ${pkgdir}/usr/lib/libkeinterface_zx.so.0
+    install -t ${pkgdir}/usr/lib ${pkgdir}/usr/lib/x86_64-linux-gnu/libvdpau_zx.so
+
+    install -Dt ${pkgdir}/usr/lib/dri ${pkgdir}/usr/lib/x86_64-linux-gnu/dri/zx_drv_video.so
+    install -Dt ${pkgdir}/usr/lib/dri ${pkgdir}/usr/lib/x86_64-linux-gnu/dri/zx_vndri.so
+    install -m644 -Dt ${pkgdir}/usr/lib/dri ${pkgdir}/usr/lib/x86_64-linux-gnu/dri/ZXEApp.cfg
+
+    install -Dt ${pkgdir}/usr/lib/gbm ${pkgdir}/usr/lib/x86_64-linux-gnu/gbm/zx_gbm.so
+
+    rm -rfv "${pkgdir}/usr/lib/x86_64-linux-gnu/"
+}
