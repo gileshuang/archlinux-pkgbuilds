@@ -1,0 +1,136 @@
+# Maintainer: adesk@sangfor.com
+# Contributor: adesk@sangfor.com
+
+_pkgname=vdi-linux-client
+pkgname=${_pkgname}
+pkgver=5.9.6.650
+pkgrel=2
+url="https://172.16.5.11/"
+pkgdesc="sangfor linux vdi client"
+license=('custom:sangfor')
+arch=('x86_64')
+conflicts=(
+    "${_pkgname}"
+    "com.sangfor.vdi"
+)
+provides=(
+    "${_pkgname}"
+    "com.sangfor.vdi"
+)
+depends=(
+    'usbip'
+    'libnss_nis'
+    'libconfig'
+    'zstd'
+    'bash'
+)
+optdepends=()
+options=(!debug !lto)
+
+source=(
+    "https://172.16.5.11/com/vdi-linux-client-x86_64-ubuntu.deb"
+    "sangfor-uos-ca-certificates_sxf.crt"
+    "libidn.so.11.6.16"
+    "libaudio.so.2.4"
+    "os-release"
+    "vdi_super_agent.sh"
+    "vdi_super_agent_start.systemd.conf"
+    "vdi_usbipd_prestart.sh"
+    "vdi_usbipd_prestart.systemd.conf"
+)
+sha256sums=('3d4eec2dded17e8337e6547f8e8237d9f3bc766f6c03e3779bd452b9888880cb'
+            '6dcfdc9e2f422004aa630bfa6e05aa0b57933572a59e873260a678e7b5db8ae2'
+            '0878adc2a90fbe681ed54393b07d7a9d3d713651da2123a52427b380261f23a4'
+            '054808ea6301d6e08971adbbe15f437ea09ceb1667a1520649838057f4b68454'
+            '87cd66be042b821a7179f7fafca3185aba166be46456956ca3fbafa0a5310c94'
+            '8aaabd3291ebe4cb84c19409131efad78aa045ab3cafb79d347953c65d0792f2'
+            '0619ca6d989f4697b68db37c4bc04d52b067c4e1c5983e33d1378b068825f6c7'
+            '67bec0e97b88a147622b4ec73e08fa8c0e4bd49429d15e4495450099a3e44d57'
+            'd76c2d5811d3ccec6a524aa8769d94645c1d3699d89d33417c46c6c5cdd665f4')
+
+package() {
+    echo "  -> Extracting the data.tar.xz..."
+    bsdtar -xf data.tar.xz -C "${pkgdir}/"
+
+    echo "  -> Move files..."
+    rm -rf "${pkgdir}/usr"
+    mv -t "${pkgdir}/" \
+        "${pkgdir}/opt/apps/com.sangfor.vdi/file/common/etc" \
+        "${pkgdir}/opt/apps/com.sangfor.vdi/file/common/usr"
+    mv -t "${pkgdir}/usr" \
+        "${pkgdir}/opt/apps/com.sangfor.vdi/file/common/lib" \
+
+    mv -t "${pkgdir}/usr/local/sangfor/vdiclient" \
+        "${pkgdir}/opt/apps/com.sangfor.vdi/file/x86_64/usr/local/sangfor/vdiclient/lib"
+
+    mv -t "${pkgdir}/usr/local/sangfor/vdiclient/lib" \
+        "${pkgdir}/opt/apps/com.sangfor.vdi/file/x86_64/thirdpart/Qt-4.8.7" \
+        "${pkgdir}/opt/apps/com.sangfor.vdi/file/x86_64/thirdpart/libldap"
+
+    install -Dm644 -T \
+        sangfor-uos-ca-certificates_sxf.crt \
+        "${pkgdir}/usr/share/ca-certificates/deepin/internal_appstore/sxf.crt"
+    install -Dm644 -T \
+        os-release \
+        "${pkgdir}/usr/local/sangfor/vdiclient/os-release"
+
+    install -Dm755 -T \
+        vdi_super_agent.sh \
+        "${pkgdir}/usr/local/sangfor/vdiclient/bin/vdi_super_agent.sh"
+    install -Dm644 -T \
+        vdi_super_agent_start.systemd.conf \
+        "${pkgdir}/usr/lib/systemd/system/vdi_super_agent.service.d/start.conf"
+    install -Dm755 -T \
+        vdi_usbipd_prestart.sh \
+        "${pkgdir}/usr/local/sangfor/vdiclient/bin/vdi_usbipd_prestart.sh"
+    install -Dm644 -T \
+        vdi_usbipd_prestart.systemd.conf \
+        "${pkgdir}/usr/lib/systemd/system/vdi_usbipd.service.d/prestart.conf"
+
+    echo "  -> Apply patch..."
+    chmod 777 "${pkgdir}/etc/sangfor/vdiclient"
+    install -dm777 "${pkgdir}/etc/sangfor/vdiclient/sourceicon"
+    chmod -R +x ${pkgdir}/usr/local/sangfor/vdiclient/bin/*
+
+    ln -sf libstdc++.so.6.0.25 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libstdc++.so.6"
+    ln -sf libsysfs.so         "${pkgdir}/usr/local/sangfor/vdiclient/lib/libsysfs.so.2"
+
+    ln -sf liblog4cplus-1.2.so.5.1.7 "${pkgdir}/usr/local/sangfor/vdiclient/lib/liblog4cplus-1.2.so.5"
+    ln -sf libuvc.so.0.0.7           "${pkgdir}/usr/local/sangfor/vdiclient/lib/libuvc.so.0"
+    ln -sf libcelt051.so.0.0.0       "${pkgdir}/usr/local/sangfor/vdiclient/lib/libcelt051.so.0"
+    ln -sf libGLU.so.1.3.1           "${pkgdir}/usr/local/sangfor/vdiclient/lib/libGLU.so.1"
+    ln -sf liblzo2.so.2.0.0          "${pkgdir}/usr/local/sangfor/vdiclient/lib/liblzo2.so.2"
+    ln -sf libpng16.so.16.37.0       "${pkgdir}/usr/local/sangfor/vdiclient/lib/libpng16.so.16"
+    ln -sf librttr_core.so.0.9.7     "${pkgdir}/usr/local/sangfor/vdiclient/lib/librttr_core.so"
+
+    ln -sf libssl.so.1.0.2k    "${pkgdir}/usr/local/sangfor/vdiclient/lib/libssl.so.10"
+    ln -sf libcrypto.so.1.0.2k "${pkgdir}/usr/local/sangfor/vdiclient/lib/libcrypto.so.10"
+
+    ln -sf libva.so.1.4000.0     "${pkgdir}/usr/local/sangfor/vdiclient/lib/libva.so.1"
+    ln -sf libva-x11.so.1.4000.0 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libva-x11.so.1"
+    ln -sf libva-drm.so.1.4000.0 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libva-drm.so.1"
+
+    ln -sf libusb-1.0.so.0.1.0        "${pkgdir}/usr/local/sangfor/vdiclient/lib/libusb-1.0.so.0"
+    ln -sf libusbredirhost.so.1.0.0   "${pkgdir}/usr/local/sangfor/vdiclient/lib/libusbredirhost.so.1"
+    ln -sf libusbredirparser.so.1.0.0 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libusbredirparser.so.1"
+
+    ln -sf libevent-2.1.so.7.0.1          "${pkgdir}/usr/local/sangfor/vdiclient/lib/libevent-2.1.so.7"
+    ln -sf libevent_core-2.1.so.7.0.1     "${pkgdir}/usr/local/sangfor/vdiclient/lib/libevent_core-2.1.so.7"
+    ln -sf libevent_pthreads-2.1.so.7.0.1 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libevent_pthreads-2.1.so.7"
+ 
+    ln -sf qt4/libQtCore.so.4    "${pkgdir}/usr/local/sangfor/vdiclient/lib/libQtCore.so.4"
+    ln -sf qt4/libQtGui.so.4     "${pkgdir}/usr/local/sangfor/vdiclient/lib/libQtGui.so.4"
+    ln -sf qt4/libQtNetwork.so.4 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libQtNetwork.so.4"
+
+    install -Dm755 -T libidn.so.11.6.16 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libidn.so.11.6.16"
+    ln -sf libidn.so.11.6.16 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libidn.so.11"
+    install -Dm755 -T libaudio.so.2.4 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libaudio.so.2.4"
+    ln -sf libaudio.so.2.4 "${pkgdir}/usr/local/sangfor/vdiclient/lib/libaudio.so.2"
+
+    # Disable import_cert.sh for prevent high CPU usage
+    echo -e '#!/bin/bash\nexit 0' > "${pkgdir}/etc/sangfor/vdiclient/import_cert.sh"
+
+    echo "  -> Clean up..."
+    rm -rf "${pkgdir}/opt/"
+}
+

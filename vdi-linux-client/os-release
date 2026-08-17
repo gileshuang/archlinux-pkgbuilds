@@ -1,0 +1,15 @@
+NAME="Kylin"
+VERSION="银河麒麟桌面操作系统V10 (SP1)"
+VERSION_US="Kylin Linux Desktop V10 (SP1)"
+ID=kylin
+ID_LIKE=debian
+PRETTY_NAME="Kylin V10 SP1"
+VERSION_ID="v10"
+HOME_URL="http://www.kylinos.cn/"
+SUPPORT_URL="http://www.kylinos.cn/support/technology.html"
+BUG_REPORT_URL="http://www.kylinos.cn/"
+PRIVACY_POLICY_URL="http://www.kylinos.cn"
+VERSION_CODENAME=kylin
+UBUNTU_CODENAME=kylin
+PROJECT_CODENAME=V10SP1
+KYLIN_RELEASE_ID="2403"
