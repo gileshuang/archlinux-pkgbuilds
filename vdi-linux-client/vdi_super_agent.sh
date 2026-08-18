@@ -1,9 +1,8 @@
 #!/bin/bash
 
 BWRAP_ARGS+=(
-    --unshare-all
+    #--unshare-all
     --share-net
-    --cap-drop ALL
     --die-with-parent
     # /usr
     --ro-bind /usr{,}
@@ -18,12 +17,16 @@ BWRAP_ARGS+=(
     # /proc
     --proc /proc
     # /etc
+    --ro-bind /etc{,}
     --ro-bind /etc/machine-id{,}
+    --ro-bind /etc/group{,}
     --ro-bind /etc/passwd{,}
     --ro-bind /etc/nsswitch.conf{,}
     --ro-bind /etc/resolv.conf{,}
-    --ro-bind /etc/localtime{,}
+    #--ro-bind-try /etc/localtime{,}
     --ro-bind-try /etc/fonts{,}
+    --ro-bind-try "/etc/pki"{,}
+    --ro-bind-try "/etc/system-fips"{,}
     # /sys
     --dir /sys/dev # hack for Intel / AMD graphics, mesa calling virtual nodes needs /sys/dev being 0755
     --ro-bind /sys/dev/char{,}
@@ -35,12 +38,6 @@ BWRAP_ARGS+=(
     --dev-bind /dev/dri /dev/dri
     --tmpfs /dev/shm
     --proc /proc
-    --ro-bind /etc/machine-id /etc/machine-id
-    --ro-bind /etc/passwd /etc/passwd
-    --ro-bind /etc/nsswitch.conf /etc/nsswitch.conf
-    --ro-bind /etc/resolv.conf /etc/resolv.conf
-    --ro-bind /etc/localtime /etc/localtime
-    --ro-bind-try /etc/fonts /etc/fonts
     --dir /sys/dev
     --ro-bind /sys/dev/char /sys/dev/char
     --ro-bind /sys/devices /sys/devices
@@ -53,5 +50,11 @@ BWRAP_ARGS+=(
     --bind "/etc/sangfor"{,}
 )
 
-bwrap ${BWRAP_ARGS[@]} /usr/local/sangfor/vdiclient/bin/vdi_super_agent $@
+if [[ ! -d "/var/log/sangfor/vdiclient" ]]; then
+    install -dm777 /var/log/sangfor/vdiclient
+fi
+if [[ ! -d "/run/sangfor/vdiclient" ]]; then
+    install -dm777 /run/sangfor/vdiclient
+fi
 
+exec bwrap ${BWRAP_ARGS[@]} /usr/local/sangfor/vdiclient/bin/vdi_super_agent $@

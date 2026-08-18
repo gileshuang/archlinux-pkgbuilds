@@ -1,0 +1,24 @@
+# Colored makepkg-like functions
+msg_blue() {
+    printf "${blue}==>${bold} $1${all_off}\n"
+}
+
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+post_install() {
+    note "Please enable system wide service by:"
+    msg_blue "    sudo systemctl enable --now vdi_usbipd.service vdi_usbmagicd.service vdi_super_agent.service"
+    note "Please enable user service by:"
+    msg_blue "    systemctl enable --user --now vdi_webui_agent.service"
+}
+
+post_upgrade() {
+    post_install
+}

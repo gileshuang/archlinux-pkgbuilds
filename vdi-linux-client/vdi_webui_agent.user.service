@@ -1,0 +1,11 @@
+[Unit]
+Description=VDI webui agent
+After=vdi_super_agent.service
+
+[Service]
+ExecStart=/usr/local/sangfor/vdiclient/bin/vdi_webui_agent
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
