@@ -15,8 +15,6 @@ yellow="${bold}$(tput setaf 3)"
 post_install() {
     note "Please enable system wide service by:"
     msg_blue "    sudo systemctl enable --now vdi_usbipd.service vdi_usbmagicd.service vdi_super_agent.service"
-    note "Please enable user service by:"
-    msg_blue "    systemctl enable --user --now vdi_webui_agent.service"
 }
 
 post_upgrade() {
