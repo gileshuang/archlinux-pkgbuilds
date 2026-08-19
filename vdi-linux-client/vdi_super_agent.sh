@@ -57,4 +57,12 @@ if [[ ! -d "/run/sangfor/vdiclient" ]]; then
     install -dm777 /run/sangfor/vdiclient
 fi
 
-exec bwrap ${BWRAP_ARGS[@]} /usr/local/sangfor/vdiclient/bin/vdi_super_agent $@
+chmod 777 /etc/sangfor/vdiclient
+chmod 777 /etc/sangfor/vdiclient/sourceicon
+
+source /etc/os-release
+if [[ "${ID}" == "ubuntu" ]] || [[ "${ID}" == "kylin" ]]; then
+    exec ${BWRAP_ARGS[@]} /usr/local/sangfor/vdiclient/bin/vdi_super_agent $@
+else
+    exec bwrap ${BWRAP_ARGS[@]} /usr/local/sangfor/vdiclient/bin/vdi_super_agent $@
+fi
