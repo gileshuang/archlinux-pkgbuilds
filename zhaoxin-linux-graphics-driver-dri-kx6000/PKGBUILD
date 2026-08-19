@@ -4,8 +4,8 @@
 
 _pkgname=zhaoxin-linux-graphics-driver-dri-kx6000
 pkgname=${_pkgname}-dkms
-pkgver=21.00.86
-pkgrel=3
+pkgver=21.00.91
+pkgrel=1
 url="https://www.zhaoxin.com"
 pkgdesc="Graphics driver for Zhaoxin C-960 (KX-6000/6900 series). \
     Fixed by https://handbook.aaether.net/pages/zhaoxin-kx-6000-igpu-driver.html"
@@ -17,8 +17,11 @@ provides=("${_pkgname}")
 depends=('glibc' 'dkms' 'libdrm' 'libglvnd' 'mesa' 'libxcb' 'wayland')
 optdepends=('linux-headers: Build the module for Arch kernel'
             'linux-lts-headers: Build the module for LTS Arch kernel')
+options=(!debug !lto)
+
 source=(
-    "zhaoxin-linux-graphics-driver-dri-glvnd-${pkgver}_amd64.deb"
+    # https://www.zhaoxin.com/qdxz.aspx?nid=31&typeid=156
+    "zhaoxin-linux-graphics-driver-dri-glvnd_${pkgver}_amd64.deb"
     "mkinitcpio.drop-in.conf"
     "modprobe.d_zx_gfx.conf"
     "egl_vendor.d_10_zx.json"
@@ -33,24 +36,40 @@ source=(
     "${_patch_url_prefix}/0007-chore-import-.gitignore-from-loonggpu-kernel-dkms.patch"
     "${_patch_url_prefix}/0008-refactor-NFC-rename-zxfb_create-to-zx_fbdev_probe.patch"
     "${_patch_url_prefix}/0009-fix-run-DRM-default-client-setup-on-Linux-6.15.patch"
-    "0010-fix-kernel-6.19.patch"
+    "${_patch_url_prefix}/0010-fix-adapt-for-shmem_file_setup-parameter-change-in-L.patch"
+    "${_patch_url_prefix}/0011-fix-remove-zx_drm_last_close-on-Linux-6.12.patch"
+    "${_patch_url_prefix}/0012-fix-adapt-for-drm_fb_helper_alloc_info-removal-in-Li.patch"
+    "${_patch_url_prefix}/0013-refactor-make-the-fbdev-ptr-in-zx_card_t-typed.patch"
+    "${_patch_url_prefix}/0014-refactor-Remove-load-callback-from-kms_driver.patch"
+    "${_patch_url_prefix}/0015-refactor-make-to_zx_fbdev-use-the-helper-ptr-stored-.patch"
+    "${_patch_url_prefix}/0016-refactor-Suspend-resume-fbdev-emulation-via-client-i.patch"
+    "${_patch_url_prefix}/0017-refactor-use-helper-instead-of-fbdev-helper-in-zx_fb.patch"
+    "${_patch_url_prefix}/0018-fix-take-out-embedded-fb_helper-in-zx_fbdev-with-Lin.patch"
 )
-sha256sums=('93627a5f44c7ed7dc6fff82bbd3906a7e42fb3258c850eb81de3fe1f7ab25b0e'
+sha256sums=('8fba2330241412c8195a953932608a53bf4937dcc4d62a55f55314e222addaa6'
             '810334420f804e9eee44c392ad1b9a643324651833255e4fabd2e9b9a4df757f'
             '14bd06ee764696dd503377f3ff1cef891bfd6224713e891a5040aace8e627c23'
             'bcaa1c1d89ed3de9f29e08fe4c41db20784571541728a878707f43b078c9692b'
             'e5a99435a96d7603c90302e7a8fbc688e6f8102186c43b692ea93b97abc021ae'
             '42cf39285a872ef67d03689e232847d80c2f54f2d5abb3c9570a5a5f8850b7c6'
-            '74b5207175d05661c8ff120d48771eded3a1afe03203a526400965b9dc3f4c86'
-            '4390ee229d537a385a775d75c40447b56fe48579f272270d263e046055088fba'
-            '7b950be85f35c138c90b4ce9057cab3ff230fb7c76e82f2fea614f4f34744bc3'
-            '5128753af7ac030e0aa7990ee46defd3ea3183478c89d6bb9d9650908cfc863e'
-            '0808210b5feb918f086bbbfa314c15ccd12a766047bb1c8b5773af7569a70d50'
-            '18c111cbcb7349340800fac54f082f1d31ffe6e9dea218a0f1831d472b209b1f'
-            '27601d73a145771a213b3af4cf003ef7f88f4b96b601483a0f223e5f31889cac'
-            '1d5b0499bd8a60eb103b98a34f3ac206f20c5f90603598947af12c9e692863f1'
-            '728e4110e79c16c0177d928967ad9ef1782a87c78811a69fdbc3767bd2585241'
-            'a287f3d3e7b3c3e6b816c1504d44588b627a2040d01d2bdb1bb1d1a8b2903146')
+            'a382577eec8d1f87b7c6405b3358e63f7acdfc161985851b814b831b97080ba1'
+            '990e3a43ab3c0f774a48934a3e8348adcf331112095935567e922f86f34d12ae'
+            '825aa0144a5e7297cbb63a7a97c7d377ea69c907e24e6a385f7016d888bd6855'
+            '31917bd5db22cc4b8f9bce5facb20fa4212b899de6086c7a0f7ed46e60391a37'
+            '4a2d0f4fe9c95696628615f3ddb807264a103250c875e3a0663f8dce671d3685'
+            '6a0a7f4f3c30c38912e251f9c7645cfe4594d3c4572cc1234cc15cb3cfc2d22b'
+            '29f73c5971e9ee7d303db2aa5accb29bc88247b00305d4aacfbc2b6bffbbe967'
+            'abb5eb2b5c922008f9eb502811b5e3d5e1a9bfb1453cb8c6226a5ffc0a33aa86'
+            'b1ac488c4802852d31aa7b84638c4f533b17d65d8903c75f59f13726b0043a72'
+            '9bd50198e19c03b9e180268235d427719404812c23fcc0f4a6ae73aec86d5c06'
+            '5400a4a100c5d5731f97a750203d48f306d43a82981dea785d4c4553c58c46c3'
+            '2c091827098f1eeb9205fbdb978db18e0427ce84ff2f4864f5c01a306a0d86fa'
+            '83660a6742c8b56bb531626e8ebd09f746c8ac4732a526f5f9a9ebfef1494dad'
+            'daf6070ec95f3ae989dc4454f44d5c620b0f61f6084722bf00f5737c9563b870'
+            '371c46be612a27e60fd82d255d41ccf6b2be46eb53ca07f2da1d81df8498491f'
+            '3d6ff5ad0ccd3a1556ab49b9b08439c29a26324b707ca62bacccad8a45d900bf'
+            'b585a24bba0a4c82c80dc645069345e42f84f190ff7aeed9dc17be6f6bb5c958'
+            '603855523b09395cf8ad2e4a9ccf947cb9d030935be8117720b4dd657d240666')
 
 package() {
     echo "  -> Extracting the data.tar.xz..."
@@ -68,11 +87,19 @@ package() {
     patch -p1 < ${srcdir}/0007-chore-import-.gitignore-from-loonggpu-kernel-dkms.patch
     patch -p1 < ${srcdir}/0008-refactor-NFC-rename-zxfb_create-to-zx_fbdev_probe.patch
     patch -p1 < ${srcdir}/0009-fix-run-DRM-default-client-setup-on-Linux-6.15.patch
-    patch -p1 < ${srcdir}/0010-fix-kernel-6.19.patch
+    patch -p1 < ${srcdir}/0010-fix-adapt-for-shmem_file_setup-parameter-change-in-L.patch
+    patch -p1 < ${srcdir}/0011-fix-remove-zx_drm_last_close-on-Linux-6.12.patch
+    patch -p1 < ${srcdir}/0012-fix-adapt-for-drm_fb_helper_alloc_info-removal-in-Li.patch
+    patch -p1 < ${srcdir}/0013-refactor-make-the-fbdev-ptr-in-zx_card_t-typed.patch
+    patch -p1 < ${srcdir}/0014-refactor-Remove-load-callback-from-kms_driver.patch
+    patch -p1 < ${srcdir}/0015-refactor-make-to_zx_fbdev-use-the-helper-ptr-stored-.patch
+    patch -p1 < ${srcdir}/0016-refactor-Suspend-resume-fbdev-emulation-via-client-i.patch
+    patch -p1 < ${srcdir}/0017-refactor-use-helper-instead-of-fbdev-helper-in-zx_fb.patch
+    patch -p1 < ${srcdir}/0018-fix-take-out-embedded-fb_helper-in-zx_fbdev-with-Lin.patch
     cd -
 
     echo "  -> Installing..."
-    rmdir ${pkgdir}/usr/local/bin
+    #rmdir ${pkgdir}/usr/local/bin
     rm -rf ${pkgdir}/usr/share/initramfs-tools
     install -Dm644 -T mkinitcpio.drop-in.conf "${pkgdir}/etc/mkinitcpio.conf.d/zhaoxin.conf"
     install -Dm644 -T modprobe.d_zx_gfx.conf "${pkgdir}/etc/modprobe.d/zx_gfx.conf"
