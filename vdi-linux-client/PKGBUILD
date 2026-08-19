@@ -3,7 +3,7 @@
 
 pkgname=vdi-linux-client
 pkgver=5.9.6.650
-pkgrel=8
+pkgrel=9
 url="https://172.16.5.11/"
 pkgdesc="sangfor linux vdi client"
 license=('custom:sangfor')
@@ -41,7 +41,7 @@ sha256sums=('3d4eec2dded17e8337e6547f8e8237d9f3bc766f6c03e3779bd452b9888880cb'
             '0878adc2a90fbe681ed54393b07d7a9d3d713651da2123a52427b380261f23a4'
             '054808ea6301d6e08971adbbe15f437ea09ceb1667a1520649838057f4b68454'
             '87cd66be042b821a7179f7fafca3185aba166be46456956ca3fbafa0a5310c94'
-            '638f74807917307133913870aa409377d416cba2ed715f96ece9bba64bc5437f'
+            '0afdfb15db2a279577248e79717a19f5246e6f24e4af49e987b9eaa732acb33e'
             '559a3536e6269e33e86e82f34578b323e0f565af80270ef52dc5ed30ab4369a1'
             '67bec0e97b88a147622b4ec73e08fa8c0e4bd49429d15e4495450099a3e44d57'
             'd76c2d5811d3ccec6a524aa8769d94645c1d3699d89d33417c46c6c5cdd665f4')
